@@ -5,6 +5,8 @@ import Post from './Post';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Button, Input } from '@material-ui/core';
+import ImageUpload from './ImageUpload';
+import InstagramEmbed from 'react-instagram-embed';
 
 function getModalStyle() {
   const top = 50;
@@ -41,6 +43,7 @@ function App() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+// login state management
   const [user,setUser]=useState(null);
   
   useEffect(() => {
@@ -55,7 +58,6 @@ function App() {
         setUser(null)
       }
     }) 
-
     return () => {
       //cleanup action
       unsubscribe();  
@@ -63,13 +65,14 @@ function App() {
   }, [user,username])//any time they change reload
 
   useEffect(() => {
-    db.collection('posts').onSnapshot(snapshot=>{
+    db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot=>{
       console.log("connected");
       setPosts(snapshot.docs.map( doc =>({
         id:doc.id,
         post:doc.data()
         
       })));
+      console.log("data fetched");
     })
   }, []) 
 
@@ -190,19 +193,30 @@ function App() {
           
         )}
       </div>
+
+      <div className="app__post">
+        {
+          posts.map(({id,post})=>(
+            <div>
+            <Post 
+            key={id}
+            username={post.username}
+            caption={post.caption}
+            imageUrl={post.imageUrl} 
+            />
+
+            {
+              user?.displayName?(
+                <ImageUpload username={user.displayName}/>
+              ):(
+                <h3>Sorry you have to log in to upload</h3>
+              )
+            }
+            </div>
+          ))
+        }
+      </div>
       
-      {
-        posts.map(({id,post})=>(
-          <Post 
-          key={id}
-          username={post.username}
-          caption={post.caption}
-          imageUrl={post.imageUrl} 
-
-          />
-        ))
-      }
-
     </div>
   );
 }
