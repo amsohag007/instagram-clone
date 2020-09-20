@@ -63,7 +63,7 @@ function App() {
       unsubscribe();  
     }
   }, [user,username])//any time they change reload
-
+////////////////posts load on page
   useEffect(() => {
     db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot=>{
       console.log("connected");
@@ -74,9 +74,18 @@ function App() {
       })));
       console.log("data fetched");
       
+      
     })
-  }, []) 
-  console.log(id);
+   
+  }, [])
+
+  //  // const [id, post]=posts;
+  //  posts.map(post=>{
+  //   console.log(post.id);
+  //   console.log(post.post);
+  //  })
+  // //console.log(posts);
+
   //firebase user authentication
   const signUp=(e)=>{
     e.preventDefault();
@@ -100,6 +109,7 @@ function App() {
     
     setOpenSignIn(false);
   }
+
 
 // rendering part.......................................................................
   return (
@@ -210,21 +220,17 @@ function App() {
 
       <div className="app__postLeft">
       {
-          posts.map(({id,post})=>(
-          
-            <div>
-              <Post 
+          posts.map(({id,post})=>           
+              (<Post 
               key={id}
               postId={id}
               user={user}
               username={post.username}
               caption={post.caption}
-              imageUrl={post.imageUrl} 
-              />
-            </div>
-
-          ))
-        }
+              imageUrl={post.imageUrl}
+              /> )                   
+          )
+      }
       </div>
 
       <div className="app__postRight">

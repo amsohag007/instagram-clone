@@ -3,37 +3,41 @@ import './Post.css'
 import Avatar from '@material-ui/core/Avatar'
 import { db } from './firebase';
 
-function Post({postID,user, username,caption,imageUrl}) {
+function Post({postId,user, username,caption,imageUrl}) {
     const [comment,setComment]=useState('');
     const [comments,setComments]=useState([]);
-     
-    // console.log(postID);
+  
     useEffect(() => {
+        console.log("comment fecthing trigggered");
         let unsubscribe;
-        if(postID){
-            
-            unsubscribe=db.collection("posts").doc(postID).collection("comments").onSnapshot(
-                (snapshot) => {
+        if(postId){
+            unsubscribe=db
+                .collection("posts")
+                .doc(postId)
+                .collection("comments")
+                .onSnapshot((snapshot) => {
                     setComments(snapshot.docs.map((doc)=>doc.data()));
-                    console.log(snapshot.docs.map((doc)=>doc.data()));
+                    // console.log(snapshot.docs.map((doc)=>doc.data()));
                 });
                 console.log("comment fetched");
         }
 
         return () => {
             unsubscribe();
-        }
+            console.log("comments fetching failed");
+        };
 
-    }, [postID])
+    }, [postId])
 
     const postComment=(e)=>{
         e.preventDefault();
-
-        db.collection("posts").doc(postID).collection("comments").add({
+        console.log("posting comment=>connecting database");
+        db.collection("posts").doc(postId).collection("comments").add({
             text:comment,
             username: user.displayName
         });
         setComments('');
+        console.log(comments.text);
     }
 
     return (
@@ -52,7 +56,6 @@ function Post({postID,user, username,caption,imageUrl}) {
             alt=""
             />
 
-        {/* username+caption */}
         <h4 className="post__text"><strong>{username}</strong> {caption}</h4>
         
         <div className="post__comment">
@@ -78,7 +81,7 @@ function Post({postID,user, username,caption,imageUrl}) {
                 className="post__button"
                 disabled={!comment}
                 type="submit"
-                onclick={postComment}
+                onClick={postComment}
             >
             Post
             </button>
