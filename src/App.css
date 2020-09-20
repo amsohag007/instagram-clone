@@ -22,4 +22,9 @@
 }
 .app__post{
   padding: 20px ;
+  display: flex;
+  justify-content: center;
+}
+.app__postRight{
+  margin-left: 20px;
 }

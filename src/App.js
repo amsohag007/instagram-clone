@@ -50,7 +50,7 @@ function App() {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if(authUser){
         //user has logged in
-        console.log(authUser);
+      //  console.log(authUser);
         setUser(authUser);
 
       }else{
@@ -73,9 +73,10 @@ function App() {
         
       })));
       console.log("data fetched");
+      
     })
   }, []) 
-
+  console.log(id);
   //firebase user authentication
   const signUp=(e)=>{
     e.preventDefault();
@@ -100,10 +101,11 @@ function App() {
     setOpenSignIn(false);
   }
 
-
+// rendering part.......................................................................
   return (
-    <div className="App">
 
+    <div className="App">
+{/* .......................signup Modal.................................................. */}
       <Modal
         open={open}
         onClose={()=>setOpen(false)}
@@ -141,6 +143,7 @@ function App() {
           </form>
           
          </div>
+    {/* .......................signIn Modal.................................................. */}
       </Modal>
       {/* //signIn modal */}
       <Modal
@@ -176,7 +179,7 @@ function App() {
           
          </div>
       </Modal>
-
+{/* .......................App Header section.................................................. */}
       <div className="app__header">
         <img 
           className="app__headerImage"
@@ -194,27 +197,51 @@ function App() {
         )}
       </div>
 
-      <div className="app__post">
-        {
-          posts.map(({id,post})=>(
-            <div>
-            <Post 
-            key={id}
-            username={post.username}
-            caption={post.caption}
-            imageUrl={post.imageUrl} 
-            />
+  {/* .......................Posts section.................................................. */}    
+  {
+                user?.displayName?(
+                  <ImageUpload username={user.displayName}/>
+                ):(
+                  <h3>Sorry you have to log in to upload</h3>
+                )
+  }
 
-            {
-              user?.displayName?(
-                <ImageUpload username={user.displayName}/>
-              ):(
-                <h3>Sorry you have to log in to upload</h3>
-              )
-            }
+      <div className="app__post">
+
+      <div className="app__postLeft">
+      {
+          posts.map(({id,post})=>(
+          
+            <div>
+              <Post 
+              key={id}
+              postId={id}
+              user={user}
+              username={post.username}
+              caption={post.caption}
+              imageUrl={post.imageUrl} 
+              />
             </div>
+
           ))
         }
+      </div>
+
+      <div className="app__postRight">
+        <InstagramEmbed
+          url='https://instagr.am/p/Zw9o4/'
+          maxWidth={320}
+          hideCaption={false}
+          containerTagName='div'
+          protocol=''
+          injectScript
+          onLoading={() => {}}
+          onSuccess={() => {}}
+          onAfterRender={() => {}}
+          onFailure={() => {}}
+        />
+      </div>
+        
       </div>
       
     </div>
