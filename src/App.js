@@ -66,13 +66,13 @@ function App() {
 ////////////////posts load on page
   useEffect(() => {
     db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot=>{
-      console.log("connected");
+      // console.log("connected");
       setPosts(snapshot.docs.map( doc =>({
         id:doc.id,
         post:doc.data()
         
       })));
-      console.log("data fetched");
+      console.log("post data fetched");
       
       
     })
@@ -221,14 +221,14 @@ function App() {
       <div className="app__postLeft">
       {
           posts.map(({id,post})=>           
-              (<Post 
-              key={id}
+              <Post
               postId={id}
+              key={posts.id}
               user={user}
               username={post.username}
               caption={post.caption}
               imageUrl={post.imageUrl}
-              /> )                   
+              />                 
           )
       }
       </div>
